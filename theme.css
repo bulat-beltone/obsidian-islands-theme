@@ -4,35 +4,36 @@
    No color changes. Works on top of any base color scheme.
    ============================================================ */
 
-/* ── Section 1: Layout variables ── */
+/* ── 1. Layout tokens ── */
 
 body {
-  --islands-gap: 12px;
+  --islands-gap: 8px;
   --islands-radius: 10px;
+  --workspace-divider-color: transparent;
 }
 
 .theme-light {
-  --islands-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07),
-                    0 2px 8px rgba(0, 0, 0, 0.06);
+  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .theme-dark {
-  --islands-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
-                    0 2px 12px rgba(0, 0, 0, 0.45);
+  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.40);
+  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* ── Section 2: Workspace "sea" — clear backgrounds so gaps show the base ── */
+/* ── 2. Sea — body is the darker "gap" surface ── */
 
-body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf,
-body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf-content,
-body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .view-header,
-body:not(.is-mobile) .workspace-tab-header-container,
-body:not(.is-mobile) .workspace-tabs,
-.workspace > .workspace-split {
+body:not(.is-mobile):has(> .app-container) {
+  background-color: var(--background-secondary);
+}
+
+body:not(.is-mobile) .app-container,
+body:not(.is-mobile) .horizontal-main-container,
+body:not(.is-mobile) .workspace {
   background-color: transparent;
 }
 
-/* Titlebar and ribbon also transparent so the sea shows */
 body {
   --titlebar-background: transparent;
   --titlebar-background-focused: transparent;
@@ -42,14 +43,48 @@ body {
   --tab-background-active: transparent;
 }
 
-/* ── Section 3: Outer workspace padding (the sea border) ── */
+.workspace-ribbon,
+.workspace-ribbon.mod-left.is-collapsed {
+  border-right: none;
+  background-color: transparent;
+}
+
+/* ── 3. Cards — workspace-tab-container is the island ── */
+
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-container,
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
+  background: var(--background-primary);
+  border-radius: var(--islands-radius);
+  overflow: hidden;
+  box-shadow: var(--islands-shadow);
+}
+
+/* ── 4. Clear inner backgrounds — they show the card's white ── */
+
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf,
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf-content,
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .view-header,
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .view-content,
+body:not(.is-mobile) .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-tabs,
+.workspace > .workspace-split {
+  background-color: transparent;
+}
+
+/* ── 5. Gaps ── */
+/* Only right + bottom — no top margin so the tab bar stays
+   flush with the titlebar/sidebar-toggle position.          */
 
 body:not(.is-mobile) .workspace {
-  margin: var(--islands-gap);
+  margin-right: var(--islands-gap);
+  margin-left: var(--islands-gap);
   overflow: visible;
 }
 
-/* ── Section 4: Vertical gaps between stacked panels ── */
+body:not(.is-mobile) .horizontal-main-container {
+  padding-bottom: var(--islands-gap);
+}
 
 body:not(.is-mobile) .workspace-split.mod-vertical {
   gap: var(--islands-gap);
@@ -61,40 +96,7 @@ body:not(.is-mobile) .workspace-split {
   overflow: visible;
 }
 
-/* ── Section 5: Each tab group = one island (card) ── */
-
-body:not(.is-mobile) .workspace-tab-container {
-  border-radius: var(--islands-radius);
-  overflow: hidden;
-  box-shadow: var(--islands-shadow);
-}
-
-/* Top-left island corner when no left sidebar */
-body:not(.is-mobile) .mod-top-left-space .workspace-tab-container {
-  border-top-left-radius: var(--islands-radius);
-}
-
-/* Top-right island corner */
-body:not(.is-mobile) .mod-top-right-space .workspace-tab-container {
-  border-top-right-radius: var(--islands-radius);
-  overflow: hidden;
-}
-
-/* Bottom corners of the overall workspace */
-body:not(.is-mobile) .workspace-split.mod-left-split,
-body:not(.is-mobile) .workspace:not(.is-left-sidedock-open) .workspace-split.mod-root {
-  border-bottom-left-radius: var(--islands-radius);
-  overflow: hidden;
-}
-
-body:not(.is-mobile) .workspace:not(.is-right-sidedock-open) .workspace-split.mod-root,
-body:not(.is-mobile) .workspace-split.mod-right-split {
-  border-bottom-right-radius: var(--islands-radius);
-  overflow: hidden;
-}
-
-/* ── Section 6: Sidebar islands — gap between sidebar and main content ── */
-
+/* Sidebar gap from the main content */
 body:not(.is-mobile) .workspace.is-left-sidedock-open
   .workspace-split.mod-horizontal.mod-left-split {
   margin-right: var(--islands-gap);
@@ -105,49 +107,65 @@ body:not(.is-mobile) .workspace.is-right-sidedock-open
   margin-left: var(--islands-gap);
 }
 
-/* Sidebar tab containers as islands */
-body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container,
-body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
-  border-radius: var(--islands-radius);
-  overflow: hidden;
-  box-shadow: var(--islands-shadow);
-}
+/* ── 6. Remove all dividers and borders ── */
 
-/* ── Section 7: Remove resize handle borders (gap is the divider now) ── */
-
+/* Resize handles: fully invisible (border + background) */
 .workspace-leaf-resize-handle {
   border-color: transparent;
+  background-color: transparent;
 }
-
-/* ── Section 8: Divider lines gone — workspace divider transparent ── */
-
-body {
-  --workspace-divider-color: transparent;
-}
-
-/* ── Section 9: Non-stacked horizontal leaf shadow (bottom panels) ── */
 
 .workspace-tabs:not(.mod-top) .workspace-tab-container > .workspace-leaf {
   box-shadow: none;
 }
 
-/* ── Section 10: Safari-style tabs ── */
-/* Pill-shaped floating tabs; active tab has a filled inner background.
-   Squircle connectors (::before / ::after) removed.
-   Based on gavinmn/obsidian-theme safaritabs.css                    */
-
-/* Semi-transparent tab tints — works over any base color */
-.theme-light {
-  --tab-background: rgba(0, 0, 0, 0.04);
-  --tab-background-active: rgba(0, 0, 0, 0.08);
+/* Tab header container: no border-bottom, no shadow */
+.workspace-tab-header-container,
+.workspace-tabs.mod-top .workspace-tab-header-container {
+  border-bottom: none;
+  box-shadow: none;
 }
 
-.theme-dark {
-  --tab-background: rgba(255, 255, 255, 0.04);
-  --tab-background-active: rgba(255, 255, 255, 0.10);
+/* Left sidebar top-left tab header: no right padding */
+.mod-left-split .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
+  padding-right: 0;
 }
 
-/* Remove Chrome-style squircle connectors */
+/* Right sidebar top-right tab header: no left padding */
+.mod-right-split .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
+  padding-left: 0;
+}
+
+/* Main editor tab header: no left padding on the inner tab list */
+.mod-root .workspace-tab-header-container-inner {
+  padding-left: 0;
+}
+
+/* Sidebar splits: remove any border */
+body:not(.is-mobile) .workspace-split.mod-left-split,
+body:not(.is-mobile) .workspace-split.mod-right-split {
+  border: none;
+}
+
+/* File explorer and sidebar leaf: no bottom separator */
+.workspace-split.mod-left-split .workspace-leaf-resize-handle,
+.workspace-split.mod-right-split .workspace-leaf-resize-handle {
+  background-color: transparent;
+  border: none;
+}
+
+/* Vault profile — island at the bottom of the left sidebar */
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
+  background-color: var(--background-primary);
+  border: none;
+  border-radius: var(--islands-radius);
+  box-shadow: var(--islands-shadow);
+  margin: var(--islands-gap) 0 var(--islands-gap);
+}
+
+/* ── 7. Safari-style tabs (Vanilla) ── */
+
+/* Remove squircle connectors */
 .workspace-tab-header::before,
 .workspace-tab-header::after {
   display: none;
@@ -157,49 +175,113 @@ body {
   display: none;
 }
 
-/* Gap between tab pills */
-.workspace-tab-header-container-inner {
-  gap: 4px;
-}
-
-/* Each tab: pill shape */
-.workspace-tab-header {
-  border-radius: 6px;
-  background: var(--tab-background);
-  box-shadow: none;
-  overflow: visible;
-}
-
-/* Active tab: filled pill, no bottom chrome merge */
-.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
-  background-color: var(--tab-background-active);
-  box-shadow: none;
-  overflow: visible;
-}
-
-/* Remove the active-tab underline stripe used in default Obsidian */
+/* Remove underline stripe on active tab */
 .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
   .workspace-tab-header-inner::before {
   display: none;
 }
 
-/* Tab inner: rounded pill */
-.workspace-tab-header-inner {
-  border-radius: 5px;
-}
-
-/* Inactive tabs: hide close button, show on hover */
-.workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
-  display: none;
-}
-
-.workspace-tab-header:hover .workspace-tab-header-inner-close-button {
-  display: flex;
-}
-
-/* Sidebar tab headers also get pill treatment */
+/* Inner tab list: equal top/bottom margin so the tab pill is vertically
+   centered inside the 40px container without shrinking it.
+   All four selectors needed to beat app.css specificity for mod-root
+   and sidebar-specific rules (0,3,0 beats 0,1,0). */
+.workspace-tab-header-container-inner,
+.mod-root .workspace-tab-header-container-inner,
 .mod-left-split .workspace-tab-header-container .workspace-tab-header-container-inner,
 .mod-right-split .workspace-tab-header-container .workspace-tab-header-container-inner {
   gap: 4px;
+  overflow: hidden;
+  margin: 5px 0;
+  padding: 0 0 0 var(--size-4-2);
+}
+
+/* Individual tab: equal top/bottom padding for balanced pill shape. */
+.workspace-tab-header-container .workspace-tab-header {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+/* + button: reset squircle negative left margin. */
+.workspace-tab-header-new-tab {
+  margin-inline-start: 0;
+}
+
+/* All tabs: transparent, rounded inner, no chrome */
+.workspace-tab-header {
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace-tab-header-inner {
   border-radius: 6px;
+}
+
+.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Active tab inner: white fill (matches card) + subtle shadow */
+.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
+  .workspace-tab-header-inner {
+  background: var(--background-primary);
+  box-shadow: var(--islands-tab-shadow);
+  border-radius: 6px;
+}
+
+/* Close button: only in mod-root tabs, hidden on inactive, show on hover.
+   Sidebar icon-tabs never get a close button.                            */
+.mod-root .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+  display: none;
+}
+
+.mod-root .workspace-tab-header:hover .workspace-tab-header-inner-close-button {
+  display: flex;
+}
+
+/* ── 8. Scrollbar — thumb only, no track ── */
+
+body {
+  --scrollbar-bg: rgba(var(--mono-rgb-100), 0);
+  --scrollbar-thumb-bg: rgba(var(--mono-rgb-100), 0.12);
+  --scrollbar-active-thumb-bg: rgba(var(--mono-rgb-100), 0.20);
+}
+
+body:not(.restored-scrollbars) ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body:not(.restored-scrollbars) ::-webkit-scrollbar-track,
+body:not(.restored-scrollbars) ::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+}
+
+body:not(.restored-scrollbars) ::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-color: transparent;
+}
+
+body:not(.restored-scrollbars):not(.is-mobile) :hover::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg);
+}
+
+body:not(.restored-scrollbars):not(.is-mobile) ::-webkit-scrollbar-thumb:hover,
+body:not(.restored-scrollbars):not(.is-mobile) ::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-active-thumb-bg);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ── 9. Status bar ── */
+
+.status-bar {
+  margin: 0 16px 16px 0;
+  border: none;
+  border-radius: 6px;
+  padding-right: var(--size-4-2);
 }
