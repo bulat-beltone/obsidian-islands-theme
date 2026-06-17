@@ -15,17 +15,20 @@ body {
 .theme-light {
   --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  /* Sea = the gap behind islands. Keep the base scheme's darker surface. */
+  /* Light: primary is the lightest surface → use it for islands,
+     secondary (darker) for the sea. */
+  --islands-card: var(--background-primary);
   --islands-sea: var(--background-secondary);
 }
 
 .theme-dark {
   --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.40);
   --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  /* In dark schemes --background-secondary is often LIGHTER than the islands,
-     which inverts the depth. Derive the sea from the island color so it is
-     always darker, regardless of the base color scheme. */
-  --islands-sea: color-mix(in srgb, var(--background-primary), #000 22%);
+  /* Dark: in this scheme secondary is the lighter surface, so swap the roles —
+     secondary for islands, primary (darker) for the sea. Pure Obsidian colors,
+     no custom values. */
+  --islands-card: var(--background-secondary);
+  --islands-sea: var(--background-primary);
 }
 
 /* ── 2. Sea — body is the darker "gap" surface ── */
@@ -60,7 +63,7 @@ body {
 body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-container,
 body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container,
 body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
-  background: var(--background-primary);
+  background: var(--islands-card);
   border-radius: var(--islands-radius);
   overflow: hidden;
   box-shadow: var(--islands-shadow);
@@ -167,7 +170,7 @@ body:not(.is-mobile) .workspace-split.mod-right-split {
 
 /* Vault profile — island at the bottom of the left sidebar */
 body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
-  background-color: var(--background-primary);
+  background-color: var(--islands-card);
   border: none;
   border-radius: var(--islands-radius);
   box-shadow: var(--islands-shadow);
@@ -242,7 +245,7 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
 /* Active tab inner: white fill (matches card) + subtle shadow */
 .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
   .workspace-tab-header-inner {
-  background: var(--background-primary);
+  background: var(--islands-card);
   box-shadow: var(--islands-tab-shadow);
   border-radius: 6px;
 }
