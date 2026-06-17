@@ -135,14 +135,14 @@ body:not(.is-mobile) .workspace.is-right-sidedock-open
   box-shadow: none;
 }
 
-/* All island tab-header containers: remove default left/right padding so
-   tabs start flush with the card edge. The frameless/macOS traffic-light
-   rules in app.css have higher specificity and still win. */
+/* All island tab-header containers: flush edges + force vertical centering
+   so pills sit at the same offsetTop in every split. */
 body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-container,
 body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-container,
 body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-container {
   padding-left: 0;
   padding-right: 0;
+  align-items: center;
 }
 
 /* Left sidebar top-left tab header: no right padding */
@@ -217,17 +217,18 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
 /* + button: reset squircle negative left margin. */
 .workspace-tab-header-new-tab {
   margin-inline-start: 0;
+  height: 30px;
 }
 
-/* All tabs: transparent, no chrome, no padding — app.css uses asymmetric
-   padding (1px top / 3.5px bottom) on mod-root tabs which misaligns the
-   30px hardcoded inner. Zero it out so the pill centers identically in
-   every context. Specificity (0,2,0) beats app.css (0,2,0) by cascade. */
+/* All tabs: transparent, no chrome, no padding. app.css sets mod-root tabs
+   to 29px height (vs 30px in sidebars) — force 30px everywhere so the pill
+   never overflows its wrapper. */
 .workspace-tab-header {
   background: transparent;
   box-shadow: none;
   padding-top: 0;
   padding-bottom: 0;
+  height: 30px;
 }
 
 /* Pill: hardcoded 30px height so hover and active are identical in all
