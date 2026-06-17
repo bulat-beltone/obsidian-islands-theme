@@ -126,6 +126,16 @@ body:not(.is-mobile) .workspace.is-right-sidedock-open
   box-shadow: none;
 }
 
+/* All island tab-header containers: remove default left/right padding so
+   tabs start flush with the card edge. The frameless/macOS traffic-light
+   rules in app.css have higher specificity and still win. */
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* Left sidebar top-left tab header: no right padding */
 .mod-left-split .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
   padding-right: 0;
@@ -133,11 +143,6 @@ body:not(.is-mobile) .workspace.is-right-sidedock-open
 
 /* Right sidebar top-right tab header: no left padding */
 .mod-right-split .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
-  padding-left: 0;
-}
-
-/* Main editor tab header: no left padding on the inner tab list */
-.mod-root .workspace-tab-header-container-inner {
   padding-left: 0;
 }
 
@@ -160,7 +165,7 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   border: none;
   border-radius: var(--islands-radius);
   box-shadow: var(--islands-shadow);
-  margin: var(--islands-gap) 0 var(--islands-gap);
+  margin: var(--islands-gap) 0 0;
 }
 
 /* ── 7. Safari-style tabs (Vanilla) ── */
@@ -181,24 +186,23 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   display: none;
 }
 
-/* Inner tab list: equal top/bottom margin so the tab pill is vertically
-   centered inside the 40px container without shrinking it.
-   All four selectors needed to beat app.css specificity for mod-root
-   and sidebar-specific rules (0,3,0 beats 0,1,0). */
+/* Inner tab list row: centered inside the 40px container.
+   Four selectors for (0,3,0) specificity. */
 .workspace-tab-header-container-inner,
 .mod-root .workspace-tab-header-container-inner,
 .mod-left-split .workspace-tab-header-container .workspace-tab-header-container-inner,
 .mod-right-split .workspace-tab-header-container .workspace-tab-header-container-inner {
   gap: 4px;
-  overflow: hidden;
+  overflow: visible;
   margin: 5px 0;
-  padding: 0 0 0 var(--size-4-2);
+  padding: 0;
 }
 
-/* Individual tab: equal top/bottom padding for balanced pill shape. */
-.workspace-tab-header-container .workspace-tab-header {
-  padding-top: 3px;
-  padding-bottom: 3px;
+/* Sidebar active: app.css sets background-modifier-hover on the tab
+   element itself — clear it so only the 30px inner pill shows. */
+.mod-left-split .workspace-tab-header-container .workspace-tab-header.is-active,
+.mod-right-split .workspace-tab-header-container .workspace-tab-header.is-active {
+  background-color: transparent;
 }
 
 /* + button: reset squircle negative left margin. */
@@ -206,13 +210,21 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   margin-inline-start: 0;
 }
 
-/* All tabs: transparent, rounded inner, no chrome */
+/* All tabs: transparent, no chrome, no padding — app.css uses asymmetric
+   padding (1px top / 3.5px bottom) on mod-root tabs which misaligns the
+   30px hardcoded inner. Zero it out so the pill centers identically in
+   every context. Specificity (0,2,0) beats app.css (0,2,0) by cascade. */
 .workspace-tab-header {
   background: transparent;
   box-shadow: none;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
+/* Pill: hardcoded 30px height so hover and active are identical in all
+   contexts regardless of app.css padding overrides. */
 .workspace-tab-header-inner {
+  height: 30px;
   border-radius: 6px;
 }
 
@@ -284,4 +296,47 @@ body:not(.restored-scrollbars):not(.is-mobile) ::-webkit-scrollbar-thumb:active 
   border: none;
   border-radius: 6px;
   padding-right: var(--size-4-2);
+}
+
+/* ── 10. Editor & content refinements ── */
+
+/* Links: no underline, with a little breathing room when one is shown */
+body {
+  --link-external-decoration: none;
+  --link-decoration: none;
+  --link-decoration-hover: none;
+  --checkbox-border-color-hover: var(--text-accent);
+  text-underline-offset: 3px;
+}
+
+/* Larger body text on mobile */
+body.is-mobile {
+  --font-text-size: 19px;
+}
+
+/* Looser vertical rhythm between blocks in the editor */
+.markdown-source-view.mod-cm6 .cm-content > * {
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.3rem !important;
+}
+
+/* Images: rounded corners with a subtle theme-aware inner border */
+img {
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--text-normal) 10%, transparent 90%);
+}
+
+/* Headings: a little more breathing room below.
+   Reading view uses margin; editor (CM6) heading lines use padding. */
+.markdown-rendered h1,
+.markdown-rendered h2,
+.markdown-rendered h3,
+.markdown-rendered h4,
+.markdown-rendered h5,
+.markdown-rendered h6 {
+  margin-bottom: calc(var(--p-spacing) + 4px);
+}
+
+.markdown-source-view.mod-cm6 .cm-content > .HyperMD-header {
+  padding-bottom: calc(0.3rem + 4px) !important;
 }
