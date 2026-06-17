@@ -15,17 +15,23 @@ body {
 .theme-light {
   --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  /* Sea = the gap behind islands. Keep the base scheme's darker surface. */
+  --islands-sea: var(--background-secondary);
 }
 
 .theme-dark {
   --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.40);
   --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  /* In dark schemes --background-secondary is often LIGHTER than the islands,
+     which inverts the depth. Derive the sea from the island color so it is
+     always darker, regardless of the base color scheme. */
+  --islands-sea: color-mix(in srgb, var(--background-primary), #000 22%);
 }
 
 /* ── 2. Sea — body is the darker "gap" surface ── */
 
 body:not(.is-mobile):has(> .app-container) {
-  background-color: var(--background-secondary);
+  background-color: var(--islands-sea);
 }
 
 body:not(.is-mobile) .app-container,
@@ -165,7 +171,7 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   border: none;
   border-radius: var(--islands-radius);
   box-shadow: var(--islands-shadow);
-  margin: var(--islands-gap) 0 0;
+  margin: 4px 0 0;
 }
 
 /* ── 7. Safari-style tabs (Vanilla) ── */
