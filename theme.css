@@ -1,0 +1,205 @@
+/* ============================================================
+   Islands — Obsidian Theme
+   Layout only: floating card panels + Safari-style tabs.
+   No color changes. Works on top of any base color scheme.
+   ============================================================ */
+
+/* ── Section 1: Layout variables ── */
+
+body {
+  --islands-gap: 12px;
+  --islands-radius: 10px;
+}
+
+.theme-light {
+  --islands-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07),
+                    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.theme-dark {
+  --islands-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
+                    0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Section 2: Workspace "sea" — clear backgrounds so gaps show the base ── */
+
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf,
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .workspace-leaf-content,
+body:not(.is-mobile) .workspace-tabs:not(.mod-stacked) .view-header,
+body:not(.is-mobile) .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-tabs,
+.workspace > .workspace-split {
+  background-color: transparent;
+}
+
+/* Titlebar and ribbon also transparent so the sea shows */
+body {
+  --titlebar-background: transparent;
+  --titlebar-background-focused: transparent;
+  --ribbon-background: transparent;
+  --ribbon-background-collapsed: transparent;
+  --tab-container-background: transparent;
+  --tab-background-active: transparent;
+}
+
+/* ── Section 3: Outer workspace padding (the sea border) ── */
+
+body:not(.is-mobile) .workspace {
+  margin: var(--islands-gap);
+  overflow: visible;
+}
+
+/* ── Section 4: Vertical gaps between stacked panels ── */
+
+body:not(.is-mobile) .workspace-split.mod-vertical {
+  gap: var(--islands-gap);
+  overflow: visible;
+}
+
+body:not(.is-mobile) .workspace-tabs,
+body:not(.is-mobile) .workspace-split {
+  overflow: visible;
+}
+
+/* ── Section 5: Each tab group = one island (card) ── */
+
+body:not(.is-mobile) .workspace-tab-container {
+  border-radius: var(--islands-radius);
+  overflow: hidden;
+  box-shadow: var(--islands-shadow);
+}
+
+/* Top-left island corner when no left sidebar */
+body:not(.is-mobile) .mod-top-left-space .workspace-tab-container {
+  border-top-left-radius: var(--islands-radius);
+}
+
+/* Top-right island corner */
+body:not(.is-mobile) .mod-top-right-space .workspace-tab-container {
+  border-top-right-radius: var(--islands-radius);
+  overflow: hidden;
+}
+
+/* Bottom corners of the overall workspace */
+body:not(.is-mobile) .workspace-split.mod-left-split,
+body:not(.is-mobile) .workspace:not(.is-left-sidedock-open) .workspace-split.mod-root {
+  border-bottom-left-radius: var(--islands-radius);
+  overflow: hidden;
+}
+
+body:not(.is-mobile) .workspace:not(.is-right-sidedock-open) .workspace-split.mod-root,
+body:not(.is-mobile) .workspace-split.mod-right-split {
+  border-bottom-right-radius: var(--islands-radius);
+  overflow: hidden;
+}
+
+/* ── Section 6: Sidebar islands — gap between sidebar and main content ── */
+
+body:not(.is-mobile) .workspace.is-left-sidedock-open
+  .workspace-split.mod-horizontal.mod-left-split {
+  margin-right: var(--islands-gap);
+}
+
+body:not(.is-mobile) .workspace.is-right-sidedock-open
+  .workspace-split.mod-horizontal.mod-right-split {
+  margin-left: var(--islands-gap);
+}
+
+/* Sidebar tab containers as islands */
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
+  border-radius: var(--islands-radius);
+  overflow: hidden;
+  box-shadow: var(--islands-shadow);
+}
+
+/* ── Section 7: Remove resize handle borders (gap is the divider now) ── */
+
+.workspace-leaf-resize-handle {
+  border-color: transparent;
+}
+
+/* ── Section 8: Divider lines gone — workspace divider transparent ── */
+
+body {
+  --workspace-divider-color: transparent;
+}
+
+/* ── Section 9: Non-stacked horizontal leaf shadow (bottom panels) ── */
+
+.workspace-tabs:not(.mod-top) .workspace-tab-container > .workspace-leaf {
+  box-shadow: none;
+}
+
+/* ── Section 10: Safari-style tabs ── */
+/* Pill-shaped floating tabs; active tab has a filled inner background.
+   Squircle connectors (::before / ::after) removed.
+   Based on gavinmn/obsidian-theme safaritabs.css                    */
+
+/* Semi-transparent tab tints — works over any base color */
+.theme-light {
+  --tab-background: rgba(0, 0, 0, 0.04);
+  --tab-background-active: rgba(0, 0, 0, 0.08);
+}
+
+.theme-dark {
+  --tab-background: rgba(255, 255, 255, 0.04);
+  --tab-background-active: rgba(255, 255, 255, 0.10);
+}
+
+/* Remove Chrome-style squircle connectors */
+.workspace-tab-header::before,
+.workspace-tab-header::after {
+  display: none;
+}
+
+.workspace-tab-header-inner::after {
+  display: none;
+}
+
+/* Gap between tab pills */
+.workspace-tab-header-container-inner {
+  gap: 4px;
+}
+
+/* Each tab: pill shape */
+.workspace-tab-header {
+  border-radius: 6px;
+  background: var(--tab-background);
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* Active tab: filled pill, no bottom chrome merge */
+.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
+  background-color: var(--tab-background-active);
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* Remove the active-tab underline stripe used in default Obsidian */
+.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
+  .workspace-tab-header-inner::before {
+  display: none;
+}
+
+/* Tab inner: rounded pill */
+.workspace-tab-header-inner {
+  border-radius: 5px;
+}
+
+/* Inactive tabs: hide close button, show on hover */
+.workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+  display: none;
+}
+
+.workspace-tab-header:hover .workspace-tab-header-inner-close-button {
+  display: flex;
+}
+
+/* Sidebar tab headers also get pill treatment */
+.mod-left-split .workspace-tab-header-container .workspace-tab-header-container-inner,
+.mod-right-split .workspace-tab-header-container .workspace-tab-header-container-inner {
+  gap: 4px;
+  border-radius: 6px;
+}
