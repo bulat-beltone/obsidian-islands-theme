@@ -8,13 +8,17 @@
 
 body {
   --islands-gap: 8px;
-  --islands-radius: 10px;
+  --islands-radius: 10px;       /* cards, islands */
+  --islands-radius-sm: 6px;     /* pills, buttons, status bar */
+  --islands-control-size: 30px; /* height of all tab bar controls */
+
   --workspace-divider-color: transparent;
+  --ribbon-width: 36px;
 }
 
 .theme-light {
   --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
   /* Light: primary is the lightest surface → use it for islands,
      secondary (darker) for the sea. */
   --islands-card: var(--background-primary);
@@ -22,8 +26,8 @@ body {
 }
 
 .theme-dark {
-  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.40);
-  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   /* Dark: in this scheme secondary is the lighter surface, so swap the roles —
      secondary for islands, primary (darker) for the sea. Pure Obsidian colors,
      no custom values. */
@@ -52,10 +56,16 @@ body {
   --tab-background-active: transparent;
 }
 
+
 .workspace-ribbon,
 .workspace-ribbon.mod-left.is-collapsed {
   border-right: none;
   background-color: transparent;
+  padding: 0;
+}
+
+.workspace-ribbon.mod-left::before {
+  border: none;
 }
 
 /* ── 3. Cards — workspace-tab-container is the island ── */
@@ -88,6 +98,7 @@ body:not(.is-mobile) .workspace-tabs,
 body:not(.is-mobile) .workspace {
   margin-right: var(--islands-gap);
   margin-left: var(--islands-gap);
+  gap: var(--islands-gap);
   overflow: visible;
 }
 
@@ -106,15 +117,15 @@ body:not(.is-mobile) .workspace-split {
 }
 
 /* Sidebar gap from the main content */
-body:not(.is-mobile) .workspace.is-left-sidedock-open
+/*body:not(.is-mobile) .workspace.is-left-sidedock-open
   .workspace-split.mod-horizontal.mod-left-split {
   margin-right: var(--islands-gap);
-}
+}*/
 
-body:not(.is-mobile) .workspace.is-right-sidedock-open
+/*body:not(.is-mobile) .workspace.is-right-sidedock-open
   .workspace-split.mod-horizontal.mod-right-split {
   margin-left: var(--islands-gap);
-}
+}*/
 
 /* ── 6. Remove all dividers and borders ── */
 
@@ -128,44 +139,53 @@ body:not(.is-mobile) .workspace.is-right-sidedock-open
   box-shadow: none;
 }
 
-/* Tab header container: no border-bottom, no shadow */
-.workspace-tab-header-container,
-.workspace-tabs.mod-top .workspace-tab-header-container {
-  border-bottom: none;
-  box-shadow: none;
-}
-
-/* All island tab-header containers: flush edges + force vertical centering
-   so pills sit at the same offsetTop in every split. */
-body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-container,
-body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-container,
-body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-container {
-  padding-left: 0;
-  padding-right: 0;
-  align-items: center;
-}
-
-/* Left sidebar top-left tab header: no right padding */
-.mod-left-split .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
-  padding-right: 0;
-}
-
-/* Right sidebar top-right tab header: no left padding */
-.mod-right-split .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
-  padding-left: 0;
-}
-
 /* Sidebar splits: remove any border */
 body:not(.is-mobile) .workspace-split.mod-left-split,
 body:not(.is-mobile) .workspace-split.mod-right-split {
   border: none;
 }
 
-/* File explorer and sidebar leaf: no bottom separator */
+/* Leaf resize handle inside sidebars: no bottom separator */
 .workspace-split.mod-left-split .workspace-leaf-resize-handle,
 .workspace-split.mod-right-split .workspace-leaf-resize-handle {
   background-color: transparent;
   border: none;
+}
+
+/* Main resize handles: invisible by default, appear on hover with delay.
+   Constrain to the island area: start below the tab header, stop at the
+   bottom gap — so the handle visually aligns with the card. */
+.workspace-leaf-resize-handle {
+  /* Fast fade-out when mouse leaves (no delay) */
+  transition: background 0.2s ease 0s;
+}
+.workspace-leaf-resize-handle:hover {
+  /* Delayed fade-in when mouse enters */
+  transition-delay: 0.5s;
+}
+/* Left sidebar: stop above the vault-profile card (42px) + gap */
+.workspace-split.mod-left-split > .workspace-leaf-resize-handle {
+  top: var(--header-height);
+  bottom: calc(var(--islands-gap) + 42px);
+  height: auto;
+  border-radius: 2px;
+}
+/* Right sidebar: stop at the island bottom edge */
+.workspace-split.mod-right-split > .workspace-leaf-resize-handle {
+  top: var(--header-height);
+  bottom: var(--islands-gap);
+  height: auto;
+  border-radius: 2px;
+}
+.workspace-split .workspace-leaf-resize-handle:hover,
+.workspace-split.mod-left-split .workspace-leaf-resize-handle:hover,
+.workspace-split.mod-right-split .workspace-leaf-resize-handle:hover {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--color-accent) 40%, transparent) 50%,
+    transparent
+  ) !important;
 }
 
 /* Vault profile — island at the bottom of the left sidebar */
@@ -174,85 +194,156 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   border: none;
   border-radius: var(--islands-radius);
   box-shadow: var(--islands-shadow);
-  margin: 4px 0 0;
+  margin: var(--islands-gap) 0 0;
 }
 
-/* ── 7. Safari-style tabs (Vanilla) ── */
+/* ── 7. Safari-style tabs ── */
 
-/* Remove squircle connectors */
-.workspace-tab-header::before,
-.workspace-tab-header::after {
+/* ── 7a. Tab container: single source of truth for height + alignment.
+   app.css has context-specific rules (macOS traffic lights, sidedock
+   spacers, etc.) that give different heights/paddings per split.
+   We override everything except the high-specificity frameless rules
+   (is-frameless / is-hidden-frameless) which handle macOS padding. ── */
+
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-container,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  padding: 0;
+  box-sizing: border-box;
+  border-bottom: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* ── 7b. Inner row of tab pills ── */
+
+body:not(.is-mobile) .workspace-split.mod-root
+  .workspace-tab-header-container-inner,
+body:not(.is-mobile) .workspace-split.mod-left-split
+  .workspace-tab-header-container .workspace-tab-header-container-inner,
+body:not(.is-mobile) .workspace-split.mod-right-split
+  .workspace-tab-header-container .workspace-tab-header-container-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 30px;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  overflow: visible;
+}
+
+/* ── 7c. Individual tab: transparent wrapper, fixed size, no chrome ──
+   Scoped to editor + sidebar splits only. ── */
+
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header,
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header {
+  height: var(--islands-control-size);
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* ── 7c-icons. Icon-only controls in the tab bar: uniform squares.
+   Only for editor (mod-root). Sidebars use their default sizes. ── */
+
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-new-tab,
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-tab-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--islands-control-size);
+  height: var(--islands-control-size);
+  min-width: var(--islands-control-size);
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* margin-inline-start: gap from tabs, reset app.css negative squircle margin */
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-new-tab {
+  margin-inline-start: var(--islands-gap);
+}
+
+/* Hide + button in sidebars — only belongs in the editor */
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-new-tab,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-new-tab {
   display: none;
 }
 
+/* clickable-icon inside editor controls: fill the parent square */
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-new-tab .clickable-icon,
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-tab-list .clickable-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--islands-control-size);
+  height: var(--islands-control-size);
+  min-width: unset;
+  min-height: unset;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── 7d. Pill (visible element inside the tab) ── */
+
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-inner,
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-header-inner,
+body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-header-inner {
+  height: 30px;
+  border-radius: var(--islands-radius-sm);
+}
+
+/* Editor tab pill: left breathing room, right stays flush */
+body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-inner {
+  padding: 0 6px 0 10px;
+}
+
+/* Remove squircle connectors and underline stripe */
+.workspace-tab-header::before,
+.workspace-tab-header::after,
 .workspace-tab-header-inner::after {
   display: none;
 }
 
-/* Remove underline stripe on active tab */
 .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
   .workspace-tab-header-inner::before {
   display: none;
 }
 
-/* Inner tab list row: centered inside the 40px container.
-   Four selectors for (0,3,0) specificity. */
-.workspace-tab-header-container-inner,
-.mod-root .workspace-tab-header-container-inner,
-.mod-left-split .workspace-tab-header-container .workspace-tab-header-container-inner,
-.mod-right-split .workspace-tab-header-container .workspace-tab-header-container-inner {
-  gap: 4px;
-  overflow: visible;
-  margin: 5px 0;
-  padding: 0;
-}
+/* ── 7e. Active tab state ── */
 
-/* Sidebar active: app.css sets background-modifier-hover on the tab
-   element itself — clear it so only the 30px inner pill shows. */
+/* app.css applies background-modifier-hover to .workspace-tab-header.is-active
+   in sidebars with specificity 0,4,0 — must match or exceed that here. */
+.workspace-tab-header.is-active,
+.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active,
 .mod-left-split .workspace-tab-header-container .workspace-tab-header.is-active,
 .mod-right-split .workspace-tab-header-container .workspace-tab-header.is-active {
   background-color: transparent;
-}
-
-/* + button: reset squircle negative left margin. */
-.workspace-tab-header-new-tab {
-  margin-inline-start: 0;
-  height: 30px;
-}
-
-/* All tabs: transparent, no chrome, no padding. app.css sets mod-root tabs
-   to 29px height (vs 30px in sidebars) — force 30px everywhere so the pill
-   never overflows its wrapper. */
-.workspace-tab-header {
-  background: transparent;
-  box-shadow: none;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 30px;
-}
-
-/* Pill: hardcoded 30px height so hover and active are identical in all
-   contexts regardless of app.css padding overrides. */
-.workspace-tab-header-inner {
-  height: 30px;
-  border-radius: 6px;
-}
-
-.workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active {
-  background-color: transparent;
+  border-radius: var(--islands-radius-sm);
   box-shadow: none;
 }
 
-/* Active tab inner: white fill (matches card) + subtle shadow */
 .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
   .workspace-tab-header-inner {
   background: var(--islands-card);
   box-shadow: var(--islands-tab-shadow);
-  border-radius: 6px;
+  border-radius: var(--islands-radius-sm);
 }
 
-/* Close button: only in mod-root tabs, hidden on inactive, show on hover.
-   Sidebar icon-tabs never get a close button.                            */
+/* ── 7f. Close button: editor tabs only, hidden until hover ── */
+
 .mod-root .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
   display: none;
 }
@@ -261,7 +352,43 @@ body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-p
   display: flex;
 }
 
-/* ── 8. Scrollbar — thumb only, no track ── */
+/* ── 7g. Hover states ──
+   app.css applies --background-modifier-hover to the OUTER of active sidebar
+   tabs with specificity 0,4,0. We need 0,5,0 to suppress it on hover so the
+   rounded white inner pill isn't surrounded by dark square corners. ── */
+
+.workspace-tab-header:hover {
+  background-color: transparent;
+  border-radius: var(--islands-radius-sm);
+}
+
+/* Suppress app.css outer background for active sidebar tabs on hover */
+.mod-left-split .workspace-tab-header-container .workspace-tab-header.is-active:hover,
+.mod-right-split .workspace-tab-header-container .workspace-tab-header.is-active:hover {
+  background-color: transparent;
+  border-radius: var(--islands-radius-sm);
+}
+
+/* Editor tabs: standard semi-transparent hover */
+.mod-root .workspace-tab-header:hover .workspace-tab-header-inner {
+  background-color: var(--background-modifier-hover);
+  border-radius: var(--islands-radius-sm);
+}
+
+/* Sidebar tabs: card-colored hover pill so it reads on the same surface
+   as the island below — avoids the "different bg layers" visual split */
+.mod-left-split .workspace-tab-header:hover .workspace-tab-header-inner,
+.mod-right-split .workspace-tab-header:hover .workspace-tab-header-inner {
+  background-color: var(--islands-card);
+  border-radius: var(--islands-radius-sm);
+}
+
+/* Active tab keeps card color on hover */
+.workspace-tab-header.is-active:hover .workspace-tab-header-inner {
+  background: var(--islands-card);
+}
+
+/* ── 8. Scrollbar — thin thumb, no track ── */
 
 body {
   --scrollbar-bg: rgba(var(--mono-rgb-100), 0);
@@ -304,8 +431,9 @@ body:not(.restored-scrollbars):not(.is-mobile) ::-webkit-scrollbar-thumb:active 
 .status-bar {
   margin: 0 16px 16px 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--islands-radius-sm);
   padding-right: var(--size-4-2);
+  background-color: var(--islands-sea);
 }
 
 /* ── 10. Editor & content refinements ── */
@@ -332,7 +460,7 @@ body.is-mobile {
 
 /* Images: rounded corners with a subtle theme-aware inner border */
 img {
-  border-radius: 8px;
+  border-radius: var(--islands-radius-sm);
   border: 1px solid color-mix(in srgb, var(--text-normal) 10%, transparent 90%);
 }
 
