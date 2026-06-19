@@ -14,6 +14,8 @@ body {
 
   --workspace-divider-color: transparent;
   --ribbon-width: 36px;
+
+  --setting-items-background: var(--islands-card);
 }
 
 .theme-light {
@@ -70,13 +72,34 @@ body {
 
 /* ── 3. Cards — workspace-tab-container is the island ── */
 
+/* Root + right split: tab-container is the island */
 body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-container,
-body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container,
 body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
   background: var(--islands-card);
   border-radius: var(--islands-radius);
   overflow: hidden;
   box-shadow: var(--islands-shadow);
+}
+
+/* Left split: one island via ::before — starts below the 40px tab-header,
+   covers both the panels area and the vault profile at the bottom.
+   isolation: isolate keeps z-index: -1 scoped to this container. */
+body:not(.is-mobile) .workspace-split.mod-left-split {
+  position: relative;
+  isolation: isolate;
+}
+body:not(.is-mobile) .workspace-split.mod-left-split::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--islands-card);
+  border-radius: var(--islands-radius);
+  box-shadow: var(--islands-shadow);
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* ── 4. Clear inner backgrounds — they show the card's white ── */
@@ -89,6 +112,18 @@ body:not(.is-mobile) .workspace-tab-header-container,
 body:not(.is-mobile) .workspace-tabs,
 .workspace > .workspace-split {
   background-color: transparent;
+}
+
+/* Left island: override --background-primary so plugins that use it
+   automatically get the correct island surface color (matters in dark mode
+   where --islands-card = --background-secondary ≠ --background-primary).
+   Also clip the top corners of the panels area to match the island radius. */
+body:not(.is-mobile) .workspace-split.mod-left-split {
+  --background-primary: var(--islands-card);
+}
+body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container {
+  overflow: hidden;
+  border-radius: var(--islands-radius) var(--islands-radius) 0 0;
 }
 
 /* ── 5. Gaps ── */
@@ -163,10 +198,10 @@ body:not(.is-mobile) .workspace-split.mod-right-split {
   /* Delayed fade-in when mouse enters */
   transition-delay: 0.5s;
 }
-/* Left sidebar: stop above the vault-profile card (42px) + gap */
+/* Left sidebar: full height of the island */
 .workspace-split.mod-left-split > .workspace-leaf-resize-handle {
   top: var(--header-height);
-  bottom: calc(var(--islands-gap) + 42px);
+  bottom: 42px;
   height: auto;
   border-radius: 2px;
 }
@@ -188,16 +223,16 @@ body:not(.is-mobile) .workspace-split.mod-right-split {
   ) !important;
 }
 
-/* Vault profile — island at the bottom of the left sidebar */
+/* Vault profile — now part of the single left island, no separate card */
 body:not(.is-mobile) .workspace-split.mod-left-split .workspace-sidedock-vault-profile {
-  background-color: var(--islands-card);
+  background-color: transparent;
   border: none;
-  border-radius: var(--islands-radius);
-  box-shadow: var(--islands-shadow);
-  margin: var(--islands-gap) 0 0;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
 }
 
-/* ── 7. Safari-style tabs ── */
+/* ── 7. Tabs ── */
 
 /* ── 7a. Tab container: single source of truth for height + alignment.
    app.css has context-specific rules (macOS traffic lights, sidedock
@@ -477,4 +512,35 @@ img {
 
 .markdown-source-view.mod-cm6 .cm-content > .HyperMD-header {
   padding-bottom: calc(0.3rem + 4px) !important;
+}
+
+/* -- 11. Settings -- */
+
+.modal.mod-settings .vertical-tab-header {
+    border-inline-end: none;
+  }
+
+
+/* Window */
+
+  .modal.mod-settings {
+    background-color: var(--islands-sea);
+  }
+
+/* Right side */
+
+  .vertical-tab-content {
+    padding-left: 0px;
+    background-color: transparent;  
+  }
+
+  /* Cards */
+  .setting-group .setting-items {
+    box-shadow: var(--islands-tab-shadow);
+  }
+
+  /* 12. Misc */
+
+.prompt {
+  border: none;
 }

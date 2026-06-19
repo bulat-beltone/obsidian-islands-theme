@@ -1,3 +1,13 @@
 .cursor/
 Obsidian UI.html
 app.css
+
+# Personal / dev-only files — not for public repo
+ai-sessions/
+OBSIDIAN-CSS.md
+ISSUES.md
+REQUIREMENTS.md
+AGENTS.md
+Docs.md
+Knowledge/
+TODO.md
