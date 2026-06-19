@@ -121,6 +121,9 @@ body:not(.is-mobile) .workspace-tabs,
    Also clip the top corners of the panels area to match the island radius. */
 body:not(.is-mobile) .workspace-split.mod-left-split {
   --background-primary: var(--islands-card);
+  --background-secondary: var(--islands-card);
+  --nn-theme-list-bg: var(--islands-card);
+  --nn-theme-nav-bg: var(--islands-card);
 }
 body:not(.is-mobile) .workspace-split.mod-left-split .workspace-tab-container {
   overflow: hidden;
