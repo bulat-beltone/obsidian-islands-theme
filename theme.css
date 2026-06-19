@@ -16,6 +16,7 @@ body {
   --ribbon-width: 36px;
 
   --setting-items-background: var(--islands-card);
+  --modal-border-color: transparent;
 }
 
 .theme-light {
