@@ -39,7 +39,7 @@ body {
 
 /* ── 2. Sea — body is the darker "gap" surface ── */
 
-body:not(.is-mobile):has(> .app-container) {
+body:not(.is-mobile) {
   background-color: var(--islands-sea);
 }
 
@@ -220,7 +220,7 @@ body:not(.is-mobile) .workspace-split.mod-right-split {
     transparent,
     color-mix(in srgb, var(--color-accent) 40%, transparent) 50%,
     transparent
-  ) !important;
+  );
 }
 
 /* Vault profile — now part of the single left island, no separate card */
@@ -489,8 +489,8 @@ body.is-mobile {
 
 /* Looser vertical rhythm between blocks in the editor */
 .markdown-source-view.mod-cm6 .cm-content > * {
-  padding-top: 0.2rem !important;
-  padding-bottom: 0.3rem !important;
+  padding-top: 0.2rem;
+  padding-bottom: 0.3rem;
 }
 
 /* Images: rounded corners with a subtle theme-aware inner border */
@@ -511,7 +511,7 @@ img {
 }
 
 .markdown-source-view.mod-cm6 .cm-content > .HyperMD-header {
-  padding-bottom: calc(0.3rem + 4px) !important;
+  padding-bottom: calc(0.3rem + 4px);
 }
 
 /* -- 11. Settings -- */
