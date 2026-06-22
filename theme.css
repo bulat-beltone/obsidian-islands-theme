@@ -524,6 +524,10 @@ img {
     border-inline-end: none;
   }
 
+.modal {
+  border: unset;
+}
+
 
 /* Window */
 
