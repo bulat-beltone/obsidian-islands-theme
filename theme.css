@@ -537,8 +537,8 @@ img {
 
 /* Right side */
 
-  .vertical-tab-content {
-    padding-left: 0px;
+  .modal.mod-settings .vertical-tab-content {
+    padding-left: 4px;
     background-color: transparent;  
   }
 
