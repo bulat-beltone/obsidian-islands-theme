@@ -8,6 +8,7 @@
 
 body {
   --islands-gap: 8px;
+  --islands-gap-2: 16px;
   --islands-radius: 10px;       /* cards, islands */
   --islands-radius-sm: 6px;     /* pills, buttons, status bar */
   --islands-control-size: 30px; /* height of all tab bar controls */
@@ -470,7 +471,7 @@ body:not(.restored-scrollbars):not(.is-mobile) ::-webkit-scrollbar-thumb:active 
 /* ── 9. Status bar ── */
 
 .status-bar {
-  margin: 0 16px 16px 0;
+  margin: 0 var(--islands-gap-2) var(--islands-gap-2) 0;
   border: none;
   border-radius: var(--islands-radius-sm);
   padding-right: var(--size-4-2);
@@ -549,7 +550,39 @@ img {
     box-shadow: var(--islands-shadow-s);
   }
 
-  /* 12. Misc */
+  /* 12. Community modal */
+
+.modal.mod-sidebar-layout .modal-content {
+  background-color: var(--islands-sea);
+}
+
+.community-modal-search-results-wrapper {
+  background-color: var(--islands-sea);
+}
+
+.community-item {
+  border-radius: var(--radius-m);
+  box-shadow: var(--islands-shadow-s);
+  border: none;
+}
+
+.community-modal-details {
+  margin: var(--islands-gap);
+  border-radius: var(--islands-radius-sm);
+  background-color: var(--islands-card);
+  border-inline-start: none;
+}
+
+.modal.mod-sidebar-layout .modal-sidebar {
+  background-color: var(--islands-sea);
+}
+
+.modal.mod-community-modal:has(.community-modal-details) .modal-close-button {
+  top: var(--islands-gap-2);
+  inset-inline-end: var(--islands-gap-2);
+}
+
+  /* 13. Misc */
 
 .prompt {
   border: none;

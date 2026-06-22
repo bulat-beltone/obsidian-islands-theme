@@ -15,7 +15,7 @@ const TARGET = path.join(__dirname, "theme.css");
 
 // Target vault name — change to match the vault you're testing in.
 // Run `obsidian vaults` to list available vault names.
-const VAULT = process.env.OBSIDIAN_VAULT || "Test 2";
+const VAULT = process.env.OBSIDIAN_VAULT || "Islands Theme";
 
 // app.customCss.loadCss() caches the theme file by vault path on first load.
 // reloadTheme() re-uses the cache and never re-reads the file.
@@ -41,11 +41,17 @@ function reload() {
   }
 }
 
-// fs.watch fires multiple events on a single save — debounce to 150ms
 let timer = null;
+let lastMtime = fs.statSync(TARGET).mtimeMs;
+
 fs.watch(TARGET, () => {
   clearTimeout(timer);
-  timer = setTimeout(reload, 400);
+  timer = setTimeout(() => {
+    const mtime = fs.statSync(TARGET).mtimeMs;
+    if (mtime === lastMtime) return;
+    lastMtime = mtime;
+    reload();
+  }, 400);
 });
 
 console.log(`Watching ${TARGET}`);
