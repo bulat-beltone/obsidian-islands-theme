@@ -20,8 +20,9 @@ body {
 }
 
 .theme-light {
-  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --islands-shadow-l: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --islands-shadow-s: 0 1px 4px rgba(0, 0, 0, 0.07);
+  
   /* Light: primary is the lightest surface → use it for islands,
      secondary (darker) for the sea. */
   --islands-card: var(--background-primary);
@@ -29,8 +30,9 @@ body {
 }
 
 .theme-dark {
-  --islands-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  --islands-tab-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  --islands-shadow-l: 0 2px 10px rgba(0, 0, 0, 0.2);
+  --islands-shadow-s: 0 1px 4px rgba(0, 0, 0, 0.2);
+
   /* Dark: in this scheme secondary is the lighter surface, so swap the roles —
      secondary for islands, primary (darker) for the sea. Pure Obsidian colors,
      no custom values. */
@@ -79,7 +81,7 @@ body:not(.is-mobile) .workspace-split.mod-right-split .workspace-tab-container {
   background: var(--islands-card);
   border-radius: var(--islands-radius);
   overflow: hidden;
-  box-shadow: var(--islands-shadow);
+  box-shadow: var(--islands-shadow-l);
 }
 
 /* Left split: one island via ::before — starts below the 40px tab-header,
@@ -98,7 +100,7 @@ body:not(.is-mobile) .workspace-split.mod-left-split::before {
   bottom: 0;
   background: var(--islands-card);
   border-radius: var(--islands-radius);
-  box-shadow: var(--islands-shadow);
+  box-shadow: var(--islands-shadow-l);
   z-index: -1;
   pointer-events: none;
 }
@@ -377,7 +379,7 @@ body:not(.is-mobile) .workspace-split.mod-root .workspace-tab-header-inner {
 .workspace-tabs:not(.mod-stacked) .workspace-tab-header.is-active
   .workspace-tab-header-inner {
   background: var(--islands-card);
-  box-shadow: var(--islands-tab-shadow);
+  box-shadow: var(--islands-shadow-s);
   border-radius: var(--islands-radius-sm);
 }
 
@@ -544,7 +546,7 @@ img {
 
   /* Cards */
   .setting-group .setting-items {
-    box-shadow: var(--islands-tab-shadow);
+    box-shadow: var(--islands-shadow-s);
   }
 
   /* 12. Misc */
