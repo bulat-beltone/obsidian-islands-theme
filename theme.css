@@ -521,6 +521,11 @@ img {
   padding-bottom: calc(0.3rem + 4px);
 }
 
+/* Document search bar: match the editor card background */
+.document-search-container {
+  background-color: var(--islands-card);
+}
+
 /* -- 11. Settings -- */
 
 .modal.mod-settings .vertical-tab-header {
