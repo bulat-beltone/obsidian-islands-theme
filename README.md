@@ -1,12 +1,11 @@
 # Islands — Obsidian Theme
 
 Modern and clean Obsidian theme Inspired by the [Islands Theme in JetBrains IDEs](https://blog.jetbrains.com/platform/2025/09/islands-theme-the-new-look-coming-to-jetbrains-ides/)
+No color overrides, no font changes, just pure vibes
+Desktop only
 
 ![Light mode](images/light.png)
 ![Dark mode](images/dark.png)
-
-No color overrides, no font changes, just pure vibes
-Desktop only
 
 ## Installation
 
